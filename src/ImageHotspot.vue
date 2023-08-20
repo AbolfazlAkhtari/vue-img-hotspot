@@ -1,5 +1,6 @@
 <template>
     <!--TODO: Submit on Enter-->
+    <!--TODO: Cancel on Esc-->
     <div class="image-wrapper" style="direction: ltr;"> <!--TODO: Make DIR dynamic-->
         <h4>Click any point on image to make a hotspot</h4> <!--TODO: Make all texts dynamic-->
 
@@ -130,6 +131,7 @@ export default {
                     this.putPointOnImage(index, x, y)
                 })
             }
+            this.$emit("pointsUpdated", this.points)
             this.cancel()
         },
 

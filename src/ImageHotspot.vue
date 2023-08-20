@@ -6,9 +6,11 @@
             <img width="100%" @mousedown="openDialog"
                  src="https://kinsta.com/wp-content/uploads/2021/03/javascript-libraries-1024x512.png"> <!--TODO: Make image source dynamic-->
 
-            <div v-for="(point, index) in points" :key="index"
-                 class="point-card" :ref="'point-card-' + index">
-                <h6 class="point-card-title">{{ point.title }}</h6>
+            <div v-for="(point, index) in points" :key="index" class="hotspot-circle"
+                 :ref="'hotspot-circle-' + index" @mouseenter="openPointCard" @mouseleave="closePointCard">
+                <div class="point-card">
+                    <h6 class="point-card-title">{{ point.title }}</h6>
+                </div>
             </div>
         </div>
 
@@ -79,11 +81,12 @@ export default {
                 button_link: this.button_link,
             });
 
-            let self = this
             this.$nextTick(() => {
-                let pointCard = self.$refs["point-card-" + index][0]
-                pointCard.style.left = self.getPointCoordinationOnImage(x, 'x') - self.getHalfOfElementWidth(pointCard) + 'px'
-                pointCard.style.top = self.getPointCoordinationOnImage(y, 'y') + 'px'
+                let hotspotCircle = this.$refs["hotspot-circle-" + index][0]
+                this.putElementOnImage(x, y, hotspotCircle)
+                this.$nextTick(() => {
+                    this.putElementOnImage(x, y, hotspotCircle.children[0])
+                })
             })
 
             this.cancel()
@@ -147,6 +150,27 @@ export default {
 
         getHalfOfElementWidth(element) {
             return element.clientWidth / 2;
+        },
+
+        openPointCard(e) {
+            // e.srcElement.children[0].style.display = 'block'
+            e.srcElement.children[0].style.opacity = 1
+        },
+
+        closePointCard(e) {
+            // e.srcElement.children[0].style.display = 'none'
+            e.srcElement.children[0].style.opacity = 0
+        },
+
+        putElementOnImage(x, y, element) {
+            console.log(element.style.left)
+            console.log(element.style.top)
+
+            element.style.left = this.getPointCoordinationOnImage(x, 'x') - this.getHalfOfElementWidth(element) + 'px'
+            element.style.top = this.getPointCoordinationOnImage(y, 'y') + 'px'
+
+            console.log(element.style.left)
+            console.log(element.style.top)
         }
     }
 }
@@ -163,8 +187,8 @@ export default {
 .details-modal {
     width: 100%;
     height: 100%;
-    position: fixed; /* Stay in place */
-    z-index: 5; /* Sit on top */
+    position: fixed;
+    z-index: 5;
     background-color: rgba(0,0,0, 0.5); /* Black w/ opacity */
     animation-name: animatetop;
     animation-duration: 0.5s;
@@ -185,12 +209,6 @@ export default {
     border-radius: 25px;
     padding: 10px;
     overflow: auto; /* Enable scroll if needed */
-}
-
-/* Add Animation */
-@keyframes animatetop {
-    from {opacity: 0}
-    to {opacity: 1}
 }
 
 .text-input {
@@ -233,13 +251,15 @@ export default {
 }
 
 .point-card {
-    position: absolute;
+    position: fixed;
     background-color: #DDDDDD;
     color: black !important;
     border-radius: 8px;
     width: fit-content;
     padding: 5px;
     text-align: center;
+    margin-top: -30px;
+    opacity: 0;
 }
 
 .point-card-title {
@@ -247,5 +267,20 @@ export default {
     color: black !important;
     border-radius: 15px;
     width: fit-content;
+    text-wrap: nowrap;
 }
+
+.hotspot-circle {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #00ADB5;
+    position: absolute;
+}
+
+@keyframes animatetop {
+    from {opacity: 0}
+    to {opacity: 1}
+}
+
 </style>

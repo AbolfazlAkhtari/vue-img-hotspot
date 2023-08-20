@@ -1,4 +1,5 @@
 <template>
+    <!--TODO: Submit on Enter-->
     <div class="image-wrapper" style="direction: ltr;"> <!--TODO: Make DIR dynamic-->
         <h4>Click any point on image to make a hotspot</h4> <!--TODO: Make all texts dynamic-->
 
@@ -56,8 +57,39 @@ export default {
             description: null,
             button_text: null,
             button_link: null,
-            points: []
+            points: [
+                {
+                    x: 25,
+                    y: 100,
+                    title: "Salam",
+                    description: "Salam",
+                    button_text: null,
+                    button_link: null,
+                },
+                {
+                    x: 250,
+                    y: 250,
+                    title: "Salam Salam",
+                    description: "Salam Salam Salam Salam Salam Salam Salam Salam Salam Salam Salam Salam Salam Salam ",
+                    button_text: "Google",
+                    button_link: "https://google.com",
+                },
+                {
+                    x: 340,
+                    y: 420,
+                    title: "Salame Mojaddad",
+                    description: "Salam Salam Salam Salam Salam Salam Salam Salam Salam Salam Salam Salam Salam Salam ",
+                    button_text: "Google",
+                    button_link: "https://google.com",
+                },
+            ]
         }
+    },
+
+    mounted() {
+        this.points.forEach((point, index) => {
+            this.putPointOnImage(index, point.x, point.y)
+        })
     },
 
     methods: {
@@ -82,11 +114,7 @@ export default {
             });
 
             this.$nextTick(() => {
-                let hotspotCircle = this.$refs["hotspot-circle-" + index][0]
-                this.putElementOnImage(x, y, hotspotCircle)
-                this.$nextTick(() => {
-                    this.putElementOnImage(x, y, hotspotCircle.children[0])
-                })
+                this.putPointOnImage(index, x, y)
             })
 
             this.cancel()
@@ -153,12 +181,10 @@ export default {
         },
 
         openPointCard(e) {
-            // e.srcElement.children[0].style.display = 'block'
             e.srcElement.children[0].style.opacity = 1
         },
 
         closePointCard(e) {
-            // e.srcElement.children[0].style.display = 'none'
             e.srcElement.children[0].style.opacity = 0
         },
 
@@ -171,6 +197,14 @@ export default {
 
             console.log(element.style.left)
             console.log(element.style.top)
+        },
+
+        putPointOnImage(index, x, y) {
+            let hotspotCircle = this.$refs["hotspot-circle-" + index][0]
+            this.putElementOnImage(x, y, hotspotCircle)
+            this.$nextTick(() => {
+                this.putElementOnImage(x, y, hotspotCircle.children[0])
+            })
         }
     }
 }

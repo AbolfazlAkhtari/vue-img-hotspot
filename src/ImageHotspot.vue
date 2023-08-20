@@ -4,11 +4,11 @@
         <h4>Click any point on image to make a hotspot</h4> <!--TODO: Make all texts dynamic-->
 
         <div>
-            <img width="100%" @mousedown="openDialog"
+            <img width="100%" @mousedown="addPoint"
                  src="https://kinsta.com/wp-content/uploads/2021/03/javascript-libraries-1024x512.png"> <!--TODO: Make image source dynamic-->
 
             <div v-for="(point, index) in points" :key="index" class="hotspot-circle"
-                 :ref="'hotspot-circle-' + index" @mouseenter="openPointCard" @mouseleave="closePointCard">
+                 :ref="'hotspot-circle-' + index" @mouseenter="openPointCard" @mouseleave="closePointCard" @click="editPoint(point, index)">
                 <div class="point-card">
                     <h6 class="point-card-title">{{ point.title }}</h6>
                 </div>
@@ -35,7 +35,7 @@
 
                 <div class="flex-centered">
                     <button :class="[!(title && description) ? 'save-btn-disabled' : 'save-btn']"
-                            @click="saveHotspot" :disabled="!(title && description)">Save</button>
+                            @click="savePoint" :disabled="!(title && description)">Save</button>
                     <button class="cancel-btn"
                             @click="cancel">Cancel</button>
                 </div>
@@ -51,7 +51,7 @@ export default {
 
     data() {
         return {
-            selectedPoint: {x: null, y: null},
+            selectedPoint: {x: null, y: null, index: null},
             dialog: false,
             title: null,
             description: null,
@@ -93,30 +93,43 @@ export default {
     },
 
     methods: {
-        openDialog(e) {
-            this.selectedPoint = this.getCoordinates(e)
+        addPoint(e) {
+            let coordinates = this.getCoordinates(e);
+            this.selectedPoint = {x: coordinates.x, y: coordinates.y, index: 0}
 
             this.dialog = true
         },
 
-        saveHotspot() {
-            let index = this.points.length
-            let x = this.selectedPoint.x
-            let y = this.selectedPoint.y
+        savePoint() {
+            if (this.selectedPoint.index) {
+                let point = this.points[this.selectedPoint.index];
 
-            this.points.push({
-                x: x,
-                y: y,
-                title: this.title,
-                description: this.description,
-                button_text: this.button_text,
-                button_link: this.button_link,
-            });
+                this.points[this.selectedPoint.index] = {
+                    x: point.x,
+                    y: point.y,
+                    title: this.title,
+                    description: this.description,
+                    button_text: this.button_text,
+                    button_link: this.button_link,
+                }
+            } else {
+                let index = this.points.length
+                let x = this.selectedPoint.x
+                let y = this.selectedPoint.y
 
-            this.$nextTick(() => {
-                this.putPointOnImage(index, x, y)
-            })
+                this.points.push({
+                    x: x,
+                    y: y,
+                    title: this.title,
+                    description: this.description,
+                    button_text: this.button_text,
+                    button_link: this.button_link,
+                });
 
+                this.$nextTick(() => {
+                    this.putPointOnImage(index, x, y)
+                })
+            }
             this.cancel()
         },
 
@@ -125,7 +138,7 @@ export default {
             this.description = null
             this.button_text = null
             this.button_link = null
-            this.selectedPoint = {x: null, y: null}
+            this.selectedPoint = {x: null, y: null, index:null}
             this.dialog = false;
         },
 
@@ -188,23 +201,30 @@ export default {
             e.srcElement.children[0].style.opacity = 0
         },
 
-        putElementOnImage(x, y, element) {
-            console.log(element.style.left)
-            console.log(element.style.top)
-
+        putCircleOnImage(x, y, element) {
             element.style.left = this.getPointCoordinationOnImage(x, 'x') - this.getHalfOfElementWidth(element) + 'px'
             element.style.top = this.getPointCoordinationOnImage(y, 'y') + 'px'
+        },
 
-            console.log(element.style.left)
-            console.log(element.style.top)
+        putCardOnCircle(element, circle) {
+            element.style.left = - (this.getHalfOfElementWidth(element) - this.getHalfOfElementWidth(circle)) + 'px'
         },
 
         putPointOnImage(index, x, y) {
             let hotspotCircle = this.$refs["hotspot-circle-" + index][0]
-            this.putElementOnImage(x, y, hotspotCircle)
+            this.putCircleOnImage(x, y, hotspotCircle)
             this.$nextTick(() => {
-                this.putElementOnImage(x, y, hotspotCircle.children[0])
+                this.putCardOnCircle(hotspotCircle.children[0], hotspotCircle)
             })
+        },
+
+        editPoint(point, index) {
+            this.selectedPoint.index = index
+            this.dialog = true;
+            this.title = point.title
+            this.description = point.description
+            this.button_text = point.button_text
+            this.button_link = point.button_link
         }
     }
 }
@@ -285,7 +305,7 @@ export default {
 }
 
 .point-card {
-    position: fixed;
+    position: absolute;
     background-color: #DDDDDD;
     color: black !important;
     border-radius: 8px;

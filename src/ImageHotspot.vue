@@ -4,13 +4,11 @@
 
         <div>
             <img width="100%" @mousedown="openDialog"
-                 src="https://kinsta.com/wp-content/uploads/2021/03/javascript-libraries-1024x512.png"> <!--TODO: Make image source 
-dynamic-->
+                 src="https://kinsta.com/wp-content/uploads/2021/03/javascript-libraries-1024x512.png"> <!--TODO: Make image source dynamic-->
 
-            <div v-for="point in points">
-                <div class="point-card">
-                    <h6 class="point-card-title">{{ point.title }}</h6>
-                </div>
+            <div v-for="(point, index) in points" :key="index"
+                 class="point-card" :ref="'point-card-' + index">
+                <h6 class="point-card-title">{{ point.title }}</h6>
             </div>
         </div>
 
@@ -68,14 +66,26 @@ export default {
         },
 
         saveHotspot() {
+            let index = this.points.length
+            let x = this.selectedPoint.x
+            let y = this.selectedPoint.y
+
             this.points.push({
-                x: this.selectedPoint.x,
-                y: this.selectedPoint.y,
+                x: x,
+                y: y,
                 title: this.title,
                 description: this.description,
                 button_text: this.button_text,
                 button_link: this.button_link,
             });
+
+            let self = this
+            this.$nextTick(() => {
+                let pointCard = self.$refs["point-card-" + index][0]
+                pointCard.style.left = self.getPointCoordinationOnImage(x, 'x') - self.getHalfOfElementWidth(pointCard) + 'px'
+                pointCard.style.top = self.getPointCoordinationOnImage(y, 'y') + 'px'
+            })
+
             this.cancel()
         },
 
@@ -92,7 +102,7 @@ export default {
             let PosX = 0;
             let PosY = 0;
             let ImgPos;
-            ImgPos = this.findPosition(document.getElementsByTagName("img")[0]);
+            ImgPos = this.findImagePosition();
             if (e.pageX || e.pageY)
             {
                 PosX = e.pageX;
@@ -112,21 +122,31 @@ export default {
             }
         },
 
-        findPosition(oElement)
+        findImagePosition()
         {
-            if(typeof( oElement.offsetParent ) != "undefined")
+            let element = document.getElementsByTagName("img")[0]
+            if(typeof( element.offsetParent ) != "undefined")
             {
-                for(var posX = 0, posY = 0; oElement; oElement = oElement.offsetParent)
+                for(var posX = 0, posY = 0; element; element = element.offsetParent)
                 {
-                    posX += oElement.offsetLeft;
-                    posY += oElement.offsetTop;
+                    posX += element.offsetLeft;
+                    posY += element.offsetTop;
                 }
                 return [ posX, posY ];
             }
             else
             {
-                return [ oElement.x, oElement.y ];
+                return [ element.x, element.y ];
             }
+        },
+
+        getPointCoordinationOnImage(point, axis) {
+            let ImgPos = this.findImagePosition();
+            return point + (axis === 'x' ? ImgPos[0] : ImgPos[1])
+        },
+
+        getHalfOfElementWidth(element) {
+            return element.clientWidth / 2;
         }
     }
 }
@@ -213,6 +233,7 @@ export default {
 }
 
 .point-card {
+    position: absolute;
     background-color: #DDDDDD;
     color: black !important;
     border-radius: 8px;

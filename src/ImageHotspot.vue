@@ -1,10 +1,11 @@
 <template>
     <div class="image-wrapper" style="direction: ltr;"> <!--TODO: Make DIR dynamic-->
         <h4>Click any point on image to make a hotspot</h4> <!--TODO: Make all texts dynamic-->
+        <label for="file">File</label>
+        <input v-if="!image" id="file" name="file" class="file-input" type="file" accept="image/*" @change="saveImage">
 
-        <div>
-            <img width="100%" @mousedown="addPoint"
-                 src="https://kinsta.com/wp-content/uploads/2021/03/javascript-libraries-1024x512.png"> <!--TODO: Make image source dynamic-->
+        <div v-if="image">
+            <img id="hotspot-image" width="100%" @mousedown="addPoint" :src="image">
 
             <div v-for="(point, index) in points" :key="index" class="hotspot-circle"
                  :ref="'hotspot-circle-' + index" @mouseenter="openPointCard" @mouseleave="closePointCard" @click="editPoint(point, index)">
@@ -51,46 +52,28 @@
 export default {
     name: "ImageHotspot",
 
+    props: ['propPoints', 'propImage'],
+
     data() {
         return {
+            image: null,
             selectedPoint: {x: null, y: null, index: null},
             dialog: false,
             title: null,
             description: null,
             button_text: null,
             button_link: null,
-            points: [
-                {
-                    x: 25,
-                    y: 100,
-                    title: "Salam",
-                    description: "Salam",
-                    button_text: null,
-                    button_link: null,
-                },
-                {
-                    x: 250,
-                    y: 250,
-                    title: "Salam Salam",
-                    description: "Salam Salam Salam Salam Salam Salam Salam Salam Salam Salam Salam Salam Salam Salam ",
-                    button_text: "Google",
-                    button_link: "https://google.com",
-                },
-                {
-                    x: 340,
-                    y: 420,
-                    title: "Salame Mojaddad",
-                    description: "Salam Salam Salam Salam Salam Salam Salam Salam Salam Salam Salam Salam Salam Salam ",
-                    button_text: "Google",
-                    button_link: "https://google.com",
-                },
-            ]
+            points: []
         }
     },
 
     mounted() {
-        this.points.forEach((point, index) => {
-            this.putPointOnImage(index, point.x, point.y)
+        this.points = this.propPoints ?? []
+        this.image = this.propImage ?? null
+        this.$nextTick(() => {
+            this.points.forEach((point, index) => {
+                this.putPointOnImage(index, point.x, point.y)
+            })
         })
     },
 
@@ -106,7 +89,6 @@ export default {
         savePoint() {
             if (this.selectedPoint.index) {
                 let point = this.points[this.selectedPoint.index];
-
                 this.points[this.selectedPoint.index] = {
                     x: point.x,
                     y: point.y,
@@ -176,7 +158,7 @@ export default {
 
         findImagePosition()
         {
-            let element = document.getElementsByTagName("img")[0]
+            let element = document.getElementById("hotspot-image")
             if(typeof( element.offsetParent ) != "undefined")
             {
                 for(var posX = 0, posY = 0; element; element = element.offsetParent)
@@ -194,7 +176,7 @@ export default {
 
         getPointCoordinationOnImage(point, axis) {
             let ImgPos = this.findImagePosition();
-            return point + (axis === 'x' ? ImgPos[0] : ImgPos[1])
+            return parseInt(point) + (axis === 'x' ? ImgPos[0] : ImgPos[1])
         },
 
         getHalfOfElementWidth(element) {
@@ -248,6 +230,11 @@ export default {
 
         removeEscapeListener() {
             document.removeEventListener('keyup', this.escapeListener)
+        },
+
+        saveImage(event) {
+            this.image = URL.createObjectURL(event.target.files[0]);
+            this.$emit("imageInserted", event.target.files[0])
         }
     }
 }
@@ -293,6 +280,15 @@ export default {
     border: 1px solid #EEEEEE;
     border-radius: 10px;
     padding: 5px;
+}
+
+.file-input {
+    width: 100%;
+    border: 1px solid #EEEEEE;
+    border-radius: 10px;
+    padding: 5px;
+    color: black;
+    background-color: white;
 }
 
 .save-btn {

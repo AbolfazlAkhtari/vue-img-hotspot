@@ -1,11 +1,14 @@
 {
   "private": false,
   "name": "vue-img-hotspot",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "",
   "main": "./dist/index.js",
   "type": "module",
-  "scripts": {},
+  "scripts": {
+    "build": "rollup -c",
+    "serve": "vue-cli-service serve src/dev/main.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AbolfazlAkhtari/vue-img-hotspot.git"
@@ -19,10 +22,14 @@
   "files": [
     "dist/*"
   ],
+  "peerDependencies": {
+    "vue": "^2.7.14"
+  },
   "dependencies": {
     "rollup-plugin-postcss": "^4.0.2"
   },
   "devDependencies": {
+    "@vue/cli-service": "^5.0.8",
     "rollup-plugin-css-only": "^4.3.0",
     "rollup-plugin-styles": "^4.0.0",
     "rollup-plugin-vue2": "^0.8.1",

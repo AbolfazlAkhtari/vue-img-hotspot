@@ -239,3 +239,5 @@ export default {
     }
 }
 </script>
+
+<style src="./index.css"></style>

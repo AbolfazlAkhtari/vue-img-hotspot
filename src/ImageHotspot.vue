@@ -1,7 +1,6 @@
 <template>
     <div class="image-wrapper" style="direction: ltr;"> <!--TODO: Make DIR dynamic-->
-        <h4>Click any point on image to make a hotspot</h4> <!--TODO: Make all texts dynamic-->
-        <label for="file">File</label>
+        <h4>{{ image ? 'Click any point on image to make a hotspot' : 'Please Upload a file'}}</h4> <!--TODO: Make all texts dynamic-->
         <input v-if="!image" id="file" name="file" class="file-input" type="file" accept="image/*" @change="saveImage">
 
         <div v-if="image">
@@ -80,14 +79,14 @@ export default {
     methods: {
         addPoint(e) {
             let coordinates = this.getCoordinates(e);
-            this.selectedPoint = {x: coordinates.x, y: coordinates.y, index: 0}
+            this.selectedPoint = {x: coordinates.x, y: coordinates.y}
 
             this.dialog = true
             this.addEscapeListener()
         },
 
         savePoint() {
-            if (this.selectedPoint.index) {
+            if (this.selectedPoint.index != null) {
                 let point = this.points[this.selectedPoint.index];
                 this.points[this.selectedPoint.index] = {
                     x: point.x,

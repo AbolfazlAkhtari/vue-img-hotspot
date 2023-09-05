@@ -33,14 +33,14 @@
 }
 
 .text-input {
-    width: 100%;
+    width: 99%;
     border: 1px solid #EEEEEE;
     border-radius: 10px;
     padding: 5px;
 }
 
 .file-input {
-    width: 100%;
+    width: 99%;
     border: 1px solid #EEEEEE;
     border-radius: 10px;
     padding: 5px;
@@ -55,6 +55,8 @@
     width: 80px;
     height: 35px;
     margin: 15px 5px 0;
+    border: none;
+    cursor: pointer;
 }
 
 .cancel-btn {
@@ -64,6 +66,8 @@
     width: 80px;
     height: 35px;
     margin: 15px 5px 0;
+    border: none;
+    cursor: pointer;
 }
 
 .save-btn-disabled {
@@ -98,6 +102,7 @@
     border-radius: 15px;
     width: fit-content;
     text-wrap: nowrap;
+    margin: 0;
 }
 
 .hotspot-circle {
@@ -111,4 +116,8 @@
 @keyframes animatetop {
     from {opacity: 0}
     to {opacity: 1}
+}
+
+label {
+    color: white;
 }

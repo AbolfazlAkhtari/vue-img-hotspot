@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <ImageHotspot></ImageHotspot>
+    <div style="margin: auto; width: 80%">
+      <ImageHotspot></ImageHotspot>
+    </div>
   </div>
 </template>
 

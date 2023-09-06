@@ -56,7 +56,9 @@ export default {
   props: {
     propPoints: {
       type: Array,
-      default: []
+      default: function () {
+        return [];
+      }
     },
     propImage: {
       type: String,

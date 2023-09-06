@@ -1,7 +1,6 @@
 <template>
-  <div class="image-wrapper" style="direction: ltr;"> <!--TODO: Make DIR dynamic-->
-    <h4>{{ image ? 'Click any point on image to make a hotspot' : 'Please Upload a file' }}</h4>
-    <!--TODO: Make all texts dynamic-->
+  <div class="image-wrapper" :style="{direction: direction}">
+    <h4>{{ topPageText }}</h4>
     <input v-if="!image" id="file" name="file" class="file-input" type="file" accept="image/*" @change="saveImage">
 
     <div v-if="image">
@@ -19,30 +18,30 @@
     <div class="details-modal" v-if="dialog">
       <div class="details-modal-content">
 
-        <label for="title">Title</label>
+        <label for="title">{{ dialogTitle }}</label>
         <input v-model="title" id="title" name="title" class="text-input"
                @keyup.enter="savePoint">
         <br>
 
-        <label for="description">Description</label>
+        <label for="description">{{ dialogDescription }}</label>
         <textarea v-model="description" id="description" name="description" class="text-input"
                   @keyup.enter="savePoint"></textarea>
         <br>
 
-        <label for="button_link">Button Link</label>
+        <label for="button_link">{{ dialogButtonLink }}</label>
         <input v-model="button_link" id="button_link" name="button_link" class="text-input"
                @keyup.enter="savePoint">
         <br>
 
-        <label for="button_text">Button Text</label>
+        <label for="button_text">{{ dialogButtonText }}</label>
         <input v-model="button_text" id="button_text" name="button_text" class="text-input"
                @keyup.enter="savePoint">
 
         <div class="flex-centered">
           <button :class="[!(title && description) ? 'save-btn-disabled' : 'save-btn']"
-                  @click="savePoint" :disabled="!(title && description)">Save
+                  @click="savePoint" :disabled="!(title && description)">{{ dialogSaveText }}
           </button>
-          <button class="cancel-btn" @click="cancel">Cancel</button>
+          <button class="cancel-btn" @click="cancel">{{ dialogCancelText }}</button>
         </div>
 
       </div>
@@ -54,7 +53,63 @@
 export default {
   name: "ImageHotspot",
 
-  props: ['propPoints', 'propImage'],
+  props: {
+    propPoints: {
+      type: Array,
+      default: []
+    },
+    propImage: {
+      type: String,
+      default: null
+    },
+
+    direction: {
+      type: String,
+      default: 'ltr',
+      validator: function (value) {
+        return ['ltr', 'rtl'].includes(value)
+      }
+    },
+
+    beforeUploadText: {
+      type: String,
+      default: 'Click any point on image to make a hotspot'
+    },
+    afterUploadText: {
+      type: String,
+      default: 'Please Upload a file'
+    },
+
+    dialogTitle: {
+      type: String,
+      default: 'Title'
+    },
+
+    dialogDescription: {
+      type: String,
+      default: 'Description'
+    },
+
+    dialogButtonLink: {
+      type: String,
+      default: 'Button Link'
+    },
+
+    dialogButtonText: {
+      type: String,
+      default: 'Button Text'
+    },
+
+    dialogSaveText: {
+      type: String,
+      default: 'Save'
+    },
+
+    dialogCancelText: {
+      type: String,
+      default: 'Cancel'
+    },
+  },
 
   data() {
     return {
@@ -69,9 +124,15 @@ export default {
     }
   },
 
+  computed: {
+    topPageText: function () {
+      return this.image ? this.beforeUploadText : this.afterUploadText
+    }
+  },
+
   mounted() {
-    this.points = this.propPoints ?? []
-    this.image = this.propImage ?? null
+    this.points = this.propPoints
+    this.image = this.propImage
     this.$nextTick(() => {
       this.points.forEach((point, index) => {
         this.putPointOnImage(index, point.x, point.y)

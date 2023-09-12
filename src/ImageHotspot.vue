@@ -136,10 +136,13 @@ export default {
     this.points = this.propPoints
     this.image = this.propImage
     this.$nextTick(() => {
-      this.points.forEach((point, index) => {
-        this.putPointOnImage(index, point.x, point.y)
-      })
-    })
+      let self = this
+      document.getElementById('hotspot-image').onload = () => {
+        self.points.forEach((point, index) => {
+          self.putPointOnImage(index, point.x, point.y);
+        });
+      }
+    });
   },
 
   methods: {

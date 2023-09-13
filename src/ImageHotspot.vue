@@ -53,7 +53,14 @@
 export default {
   name: "ImageHotspot",
 
+  emits: ['pointsUpdated', 'imageUploaded'],
+
   props: {
+    readOnly: {
+      type: Boolean,
+      default: false,
+    },
+
     propPoints: {
       type: Array,
       default: function () {
@@ -135,14 +142,18 @@ export default {
   mounted() {
     this.points = this.propPoints
     this.image = this.propImage
-    this.$nextTick(() => {
-      let self = this
-      document.getElementById('hotspot-image').onload = () => {
-        self.points.forEach((point, index) => {
-          self.putPointOnImage(index, point.x, point.y);
-        });
-      }
-    });
+    if (this.image) {
+      this.$nextTick(() => {
+        let self = this
+        document.getElementById('hotspot-image').onload = () => {
+          if (this.points) {
+            self.points.forEach((point, index) => {
+              self.putPointOnImage(index, point.x, point.y);
+            });
+          }
+        }
+      });
+    }
   },
 
   methods: {
@@ -294,7 +305,7 @@ export default {
 
     saveImage(event) {
       this.image = URL.createObjectURL(event.target.files[0]);
-      this.$emit("imageInserted", event.target.files[0])
+      this.$emit("imageUploaded", event.target.files[0])
     }
   }
 }

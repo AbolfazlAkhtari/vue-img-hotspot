@@ -57,6 +57,10 @@
     text-align: justify;
 }
 
+a {
+    color: white!important;;
+}
+
 .text-input {
     width: 99%;
     border: 1px solid #EEEEEE;

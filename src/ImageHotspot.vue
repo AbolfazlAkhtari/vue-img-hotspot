@@ -4,46 +4,56 @@
     <input v-if="!image" id="file" name="file" class="file-input" type="file" accept="image/*" @change="saveImage">
 
     <div v-if="image">
-      <img id="hotspot-image" width="100%" @mousedown="addPoint" :src="image">
+      <img id="hotspot-image" width="100%" @mousedown="readOnly ? null : addPoint" :src="image">
 
       <div v-for="(point, index) in points" :key="index" class="hotspot-circle"
            :ref="'hotspot-circle-' + index" @mouseenter="openPointCard" @mouseleave="closePointCard"
-           @click="editPoint(point, index)">
+           @click="readOnly ? showPoint(point) : editPoint(point, index)">
         <div class="point-card">
           <h6 class="point-card-title">{{ point.title }}</h6>
         </div>
       </div>
     </div>
 
-    <div class="details-modal" v-if="dialog">
-      <div class="details-modal-content">
+    <div class="edit-dialog" v-if="editDialog">
+      <div class="edit-dialog-content">
 
-        <label for="title">{{ dialogTitle }}</label>
+        <label for="title">{{ editDialogTitle }}</label>
         <input v-model="title" id="title" name="title" class="text-input"
-               @keyup.enter="savePoint">
+               @keyup.enter="savePoint">`
         <br>
 
-        <label for="description">{{ dialogDescription }}</label>
+        <label for="description">{{ editDialogDescription }}</label>
         <textarea v-model="description" id="description" name="description" class="text-input"
                   @keyup.enter="savePoint"></textarea>
         <br>
 
-        <label for="button_link">{{ dialogButtonLink }}</label>
+        <label for="button_link">{{ editDialogButtonLink }}</label>
         <input v-model="button_link" id="button_link" name="button_link" class="text-input"
                @keyup.enter="savePoint">
         <br>
 
-        <label for="button_text">{{ dialogButtonText }}</label>
+        <label for="button_text">{{ editDialogButtonText }}</label>
         <input v-model="button_text" id="button_text" name="button_text" class="text-input"
                @keyup.enter="savePoint">
 
         <div class="flex-centered">
           <button :class="[!(title && description) ? 'save-btn-disabled' : 'save-btn']"
-                  @click="savePoint" :disabled="!(title && description)">{{ dialogSaveText }}
+                  @click="savePoint" :disabled="!(title && description)">{{ editDialogSaveText }}
           </button>
-          <button class="cancel-btn" @click="cancel">{{ dialogCancelText }}</button>
+          <button class="cancel-btn" @click="cancel">{{ editDialogCancelText }}</button>
         </div>
 
+      </div>
+    </div>
+
+    <div class="detail-dialog" v-if="showDialog">
+      <div class="detail-dialog-content">
+        <h3>{{ title }}</h3>
+
+        <p>{{ description }}</p>
+
+        <a v-if="button_text" class="detail-btn" :href="button_link">{{ button_text }}</a>
       </div>
     </div>
   </div>
@@ -89,32 +99,32 @@ export default {
       default: 'Please Upload a file'
     },
 
-    dialogTitle: {
+    editDialogTitle: {
       type: String,
       default: 'Title'
     },
 
-    dialogDescription: {
+    editDialogDescription: {
       type: String,
       default: 'Description'
     },
 
-    dialogButtonLink: {
+    editDialogButtonLink: {
       type: String,
       default: 'Button Link'
     },
 
-    dialogButtonText: {
+    editDialogButtonText: {
       type: String,
       default: 'Button Text'
     },
 
-    dialogSaveText: {
+    editDialogSaveText: {
       type: String,
       default: 'Save'
     },
 
-    dialogCancelText: {
+    editDialogCancelText: {
       type: String,
       default: 'Cancel'
     },
@@ -124,7 +134,8 @@ export default {
     return {
       image: null,
       selectedPoint: {x: null, y: null, index: null},
-      dialog: false,
+      editDialog: false,
+      showDialog: false,
       title: null,
       description: null,
       button_text: null,
@@ -161,7 +172,7 @@ export default {
       let coordinates = this.getCoordinates(e);
       this.selectedPoint = {x: coordinates.x, y: coordinates.y}
 
-      this.dialog = true
+      this.editDialog = true
       this.addEscapeListener()
     },
 
@@ -207,7 +218,8 @@ export default {
       this.button_text = null
       this.button_link = null
       this.selectedPoint = {x: null, y: null, index: null}
-      this.dialog = false;
+      this.editDialog = false;
+      this.showDialog = false;
       this.removeEscapeListener()
     },
 
@@ -285,7 +297,7 @@ export default {
       this.description = point.description
       this.button_text = point.button_text
       this.button_link = point.button_link
-      this.dialog = true;
+      this.editDialog = true;
       this.addEscapeListener()
     },
 
@@ -306,6 +318,15 @@ export default {
     saveImage(event) {
       this.image = URL.createObjectURL(event.target.files[0]);
       this.$emit("imageUploaded", event.target.files[0])
+    },
+
+    showPoint(point) {
+      this.showDialog = true
+      this.title = point.title
+      this.description = point.description
+      this.button_link = point.button_link
+      this.button_text = point.button_text
+      this.addEscapeListener()
     }
   }
 }

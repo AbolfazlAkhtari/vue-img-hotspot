@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <div class="edit-dialog" v-if="editDialog">
+    <div class="edit-dialog" v-if="editDialog" @click.self="editDialog = false">
       <div class="edit-dialog-content">
 
         <label for="title">{{ editDialogTitle }}</label>
@@ -48,8 +48,11 @@
       </div>
     </div>
 
-    <div class="detail-dialog" v-if="showDialog">
-      <div class="detail-dialog-content">
+    <div class="detail-dialog" v-if="showDialog" @click.self="showDialog = false">
+      <div :class="[
+          'detail-dialog-content',
+           showDialogPosition === 'right' ? 'detail-dialog-content-right' : 'detail-dialog-content-left'
+      ]">
         <h3>{{ title }}</h3>
 
         <p>{{ description }}</p>
@@ -137,6 +140,7 @@ export default {
       selectedPoint: {x: null, y: null, index: null},
       editDialog: false,
       showDialog: false,
+      showDialogPosition: "",
       title: null,
       description: null,
       button_text: null,
@@ -327,6 +331,14 @@ export default {
       this.description = point.description
       this.button_link = point.button_link
       this.button_text = point.button_text
+
+      let element = document.getElementById("hotspot-image")
+      if (point.x < element.width / 2) {
+        this.showDialogPosition = 'right';
+      } else {
+        this.showDialogPosition = 'left';
+      }
+
       this.addEscapeListener()
     }
   }

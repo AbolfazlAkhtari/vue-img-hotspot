@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-<!--    <div style="margin: auto; width: 80%">-->
-<!--      <ImageHotspot @pointsUpdated="pointsUpdated" @imageUploaded="imageUploaded"></ImageHotspot>-->
-<!--    </div>-->
-    <div v-if="points" style="width: 80%; margin: 20px auto auto;">
-      <ImageHotspot read-only :prop-points="points" :prop-image="image"></ImageHotspot>
+    <div style="margin: auto; width: 80%">
+      <ImageHotspot @pointsUpdated="pointsUpdated" @imageUploaded="imageUploaded"></ImageHotspot>
     </div>
+<!--    <div v-if="points" style="width: 80%; margin: 20px auto auto;">-->
+<!--      <ImageHotspot read-only :prop-points="points" :prop-image="image"></ImageHotspot>-->
+<!--    </div>-->
   </div>
 </template>
 

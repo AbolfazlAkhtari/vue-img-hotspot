@@ -4,7 +4,8 @@
     <input v-if="!image" id="file" name="file" class="file-input" type="file" accept="image/*" @change="saveImage">
 
     <div v-if="image">
-      <img id="hotspot-image" width="100%" @mousedown="readOnly ? null : addPoint" :src="image">
+      <img id="hotspot-image" width="100%" v-if="readOnly" :src="image">
+      <img id="hotspot-image" width="100%" v-else @mousedown="addPoint" :src="image">
 
       <div v-for="(point, index) in points" :key="index" class="hotspot-circle"
            :ref="'hotspot-circle-' + index" @mouseenter="openPointCard" @mouseleave="closePointCard"

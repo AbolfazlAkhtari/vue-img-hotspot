@@ -24,7 +24,7 @@ export default {
       points: [
         {
           x: 370,
-          y: 30,
+          y: 90,
           title: 'Title',
           description: 'Some kind of a long description they may put in somewhere like here, Some kind of a long description they may put in somewhere like here, Some kind of a long description they may put in somewhere like here, Some kind of a long description they may put in somewhere like here, Some kind of a long description they may put in somewhere like here, Some kind of a long description they may put in somewhere like here, Some kind of a long description they may put in somewhere like here, Some kind of a long description they may put in somewhere like here, Some kind of a long description they may put in somewhere like here, Some kind of a long description they may put in somewhere like here, ',
           button_text: 'Google',
@@ -32,14 +32,14 @@ export default {
         },
         {
           x: 680,
-          y: 30,
+          y: 160,
           title: 'Title',
           description: 'Some kind of a long description they may put in somewhere like here, Some kind of a long description they may put in somewhere like here, Some kind of a long description they may put in somewhere like here, Some kind of a long description they may put in somewhere like here, Some kind of a long description they may put in somewhere like here, Some kind of a long description they may put in somewhere like here, Some kind of a long description they may put in somewhere like here, Some kind of a long description they may put in somewhere like here, Some kind of a long description they may put in somewhere like here, Some kind of a long description they may put in somewhere like here, ',
           button_text: 'Google',
           button_link: 'https://google.com',
         },
       ],
-      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAGbzrhpTi4Q0o5o0JSRVDSZ6zifJth2yxXYg26zgW&s'
+      image: 'https://openmaptiles.org/img/home-banner-map.png'
     }
   },
 

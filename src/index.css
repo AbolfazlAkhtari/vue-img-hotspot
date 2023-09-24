@@ -11,7 +11,7 @@
     position: fixed;
     z-index: 5;
     background-color: rgba(0,0,0, 0.5); /* Black w/ opacity */
-    animation-name: animatetop;
+    animation-name: animateTop;
     animation-duration: 0.5s;
     display: flex;
     justify-content: center;
@@ -38,7 +38,7 @@
     position: fixed;
     z-index: 5;
     background-color: rgba(0,0,0, 0.5); /* Black w/ opacity */
-    animation-name: animatetop;
+    animation-name: animateTop;
     animation-duration: 0.5s;
     top: 0;
     left: 0;
@@ -50,7 +50,7 @@
     background-color: #222831; /* Black w/ opacity */ /* TODO: Dynamic */
     padding: 20px;
     overflow: auto; /* Enable scroll if needed */
-    animation-name: animateleft;
+    animation-name: animateLeft;
     animation-duration: 0.5s;
     color: white;
     text-align: justify;
@@ -160,19 +160,57 @@ a {
 }
 
 .hotspot-circle {
-    width: 25px;
-    height: 25px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    background-color: #00ADB5;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #00ffb9;
+    transition: border-width 0.3s linear;
+    background-color: rgba(0,0,40, 0.7);
     position: absolute;
+    box-sizing: border-box;
 }
 
-@keyframes animatetop {
+.hotspot-circle:hover {
+    border-width: 2px;
+}
+
+.hotspot-circle:hover > .hotspot-inner-circle {
+    left: 11px;
+    top: 11px;
+    width: 14px;
+    height: 14px;
+}
+
+.hotspot-inner-circle {
+    width: 18px;
+    height: 18px;
+    background-color: rgba(255,255,255, 0.9);
+    border-radius: 50%;
+    position: absolute;
+
+    /* Because of box-sizing: border-box on it's parent, border's width needs to be decreased 11 - 1 = 10 */
+    left: 10px;
+    top: 10px;
+    transition: width 0.3s linear, height 0.3s linear, top 0.3s linear, left 0.3s linear;
+}
+
+@keyframes animateTop {
     from {opacity: 0}
     to {opacity: 1}
 }
 
-@keyframes animateleft {
+/*@keyframes animateBorder {*/
+/*    0% {  border-width:1px;}*/
+/*    15% {  border-width:1.2px;}*/
+/*    35% {  border-width:1.4px;}*/
+/*    50% {  border-width:1.6px;}*/
+/*    75% {  border-width:1.8px;}*/
+/*    100% {  border-width:2px;}*/
+/*}*/
+
+@keyframes animateLeft {
     0% {
         opacity: 0;
         transform: translateX(-100px);

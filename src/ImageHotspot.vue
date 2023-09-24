@@ -13,6 +13,7 @@
         <div class="point-card">
           <h6 class="point-card-title">{{ point.title }}</h6>
         </div>
+        <div class="hotspot-inner-circle"></div>
       </div>
     </div>
 

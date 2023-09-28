@@ -1,6 +1,6 @@
 <template>
   <div class="image-wrapper" :style="{direction: direction}">
-    <h4>{{ topPageText }}</h4>
+    <h4 v-if="!readOnly">{{ topPageText }}</h4>
     <input v-if="!image" id="file" name="file" class="file-input" type="file" accept="image/*" @change="saveImage">
 
     <div v-if="image">

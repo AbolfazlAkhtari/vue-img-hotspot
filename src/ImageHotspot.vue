@@ -58,7 +58,7 @@
 
         <p>{{ description }}</p>
 
-        <a v-if="button_text" class="detail-btn" :href="button_link">{{ button_text }}</a>
+        <a v-if="button_text" target="_blank" class="detail-btn" :href="button_link">{{ button_text }}</a>
       </div>
     </div>
   </div>

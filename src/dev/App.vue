@@ -4,7 +4,7 @@
 <!--      <ImageHotspot @pointsUpdated="pointsUpdated" @imageUploaded="imageUploaded"></ImageHotspot>-->
 <!--    </div>-->
     <div v-if="points" style="width: 80%; margin: 20px auto auto;">
-      <ImageHotspot read-only :prop-points="points" :prop-image="image"></ImageHotspot>
+      <ImageHotspot :prop-points="null" :prop-image="null"></ImageHotspot>
     </div>
   </div>
 </template>

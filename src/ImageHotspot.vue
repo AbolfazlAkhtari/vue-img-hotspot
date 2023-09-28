@@ -157,7 +157,7 @@ export default {
   },
 
   mounted() {
-    this.points = this.propPoints
+    this.points = this.propPoints ?? []
     this.image = this.propImage
     if (this.image) {
       this.$nextTick(() => {

@@ -14,22 +14,50 @@
 
 # Table of Contents
 * [Installation](#installation)
+  * [Vue 3](#vue-3)
+  * [Vue 2](#vue-2)
+  * [Nuxt](#nuxt)
 * [Usage](#usage)
     * [Adding Points](#adding-points)
     * [Showing Points](#showing-points)
     * [Full Implementation](#full-implementation)
 
 ## Installation
-
+### Vue 3
+Currently not supported, development will start soon
+### Vue 2
+1. Installation Command
 ``` bash
 npm i vue-img-hotspot
 ```
 
-Then by using it in `main.js` file, It's globally available in all components:
+2. Using it in `main.js` file, It's globally available in all components hereafter:
 ``` javascript 
 import ImageHotspot from 'vue-img-hotspot';
 ...
 Vue.use( ImageHotspot );
+```
+
+### Nuxt
+1. Installation Command
+``` bash
+npm i vue-img-hotspot
+```
+
+2. Add a custom plugin in `nuxt.config.js`:
+``` javascript 
+  plugins: [
+    // your other plugins
+    '~/plugins/vue-image-hotspot',
+  ],
+```
+
+3. Make `vue-image-hotspot.js` inside `plugins` directory in the root of your project and put the following content inside of it:
+``` javascript
+import Vue from 'vue'
+import ImageHotspot from 'vue-img-hotspot'
+
+Vue.use(ImageHotspot)
 ```
 
 ## Usage

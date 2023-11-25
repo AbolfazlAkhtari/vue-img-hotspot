@@ -74,7 +74,7 @@ Script:
   data() {
     return {
       points: [],
-      image: null",
+      image: null,
     }
   },
 

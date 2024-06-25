@@ -230,23 +230,11 @@ export default {
     },
 
     getCoordinates(e) {
-      let PosX = 0;
-      let PosY = 0;
-      let ImgPos;
-      ImgPos = this.findImagePosition();
-      if (e.pageX || e.pageY) {
-        PosX = e.pageX;
-        PosY = e.pageY;
-      } else if (e.clientX || e.clientY) {
-        PosX = e.clientX + document.body.scrollLeft
-            + document.documentElement.scrollLeft;
-        PosY = e.clientY + document.body.scrollTop
-            + document.documentElement.scrollTop;
-      }
+      let element = document.getElementById("hotspot-image")
 
       return {
-        x: PosX - ImgPos[0],
-        y: PosY - ImgPos[1],
+        x: e.offsetX * 100 / element.width,
+        y: e.offsetY * 100 / element.height,
       }
     },
 
@@ -265,11 +253,25 @@ export default {
 
     getPointCoordinationOnImage(point, axis) {
       let ImgPos = this.findImagePosition();
-      return parseInt(point) + (axis === 'x' ? ImgPos[0] : ImgPos[1])
+
+      let imageEl = document.getElementById("hotspot-image")
+      if (axis === 'x') {
+        point = point * imageEl.width / 100
+        ImgPos = ImgPos[0]
+      } else {
+        point = point * imageEl.height / 100
+        ImgPos = ImgPos[1]
+      }
+
+      return parseInt(point) + ImgPos
     },
 
     getHalfOfElementWidth(element) {
       return element.clientWidth / 2;
+    },
+
+    getHalfOfElementHeight(element) {
+      return element.clientHeight / 2;
     },
 
     openPointCard(e) {
@@ -282,7 +284,7 @@ export default {
 
     putCircleOnImage(x, y, element) {
       element.style.left = this.getPointCoordinationOnImage(x, 'x') - this.getHalfOfElementWidth(element) + 'px'
-      element.style.top = this.getPointCoordinationOnImage(y, 'y') + 'px'
+      element.style.top = this.getPointCoordinationOnImage(y, 'y') - this.getHalfOfElementHeight(element) + 'px'
     },
 
     putCardOnCircle(element, circle) {

@@ -335,8 +335,10 @@ export default {
       this.button_link = point.button_link
       this.button_text = point.button_text
 
+      let xPoint = this.getPointCoordinationOnImage(point.x, 'x')
       let element = document.getElementById("hotspot-image")
-      if (point.x < element.width / 2) {
+
+      if (xPoint < element.width / 2) {
         this.showDialogPosition = 'right';
       } else {
         this.showDialogPosition = 'left';
